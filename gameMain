@@ -1,0 +1,11 @@
+class battleshipMain {
+  public static void main(String[] args) {
+    
+    battleship game = new battleship();
+    game.intro();
+    game.setUserArray();
+    game.setArray();
+    game.getGuess();
+    game.endGame();
+  }
+}
