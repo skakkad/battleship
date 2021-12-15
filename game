@@ -1,0 +1,197 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.util.Arrays;
+public class battleship {
+  
+  // variables
+  private int row;
+  private int col;
+  private int arrRow = 8;
+  private int arrCol = 8;
+  private String [][] array = new String [arrRow][arrCol]; // array for solution ships
+  private String[][] userArray = new String [arrRow][arrCol]; // array that user enters guesses into
+  private int randRow, randCol;
+  private int hitCounter = 17;
+  private int numTurns = 0;
+  
+  // grid key: empty " ", ship "s", wrong guess "~", uncovered ship "x"
+  
+  // displays game name, directions, and key. 
+  public void intro() {
+    System.out.println("BATTLESHIP");
+    System.out.println("There are 5 ships on the board. Guess a position (row and column) to find and sink the ships!");
+    System.out.println("KEY: water (~), uncovered ship (x).");
+    System.out.println();
+    System.out.println();
+  }
+  
+  // populates entire user array with spaces
+  public void setUserArray() {
+    for (int x = 0; x < arrRow; x++) { 
+      for (int y = 0; y < arrCol; y++) {
+        userArray[x][y] = " ";
+      }   
+    }
+  }
+  
+  // answer key array
+  public void setArray() { 
+    Random rand = new Random(); //instance of random class
+    for (int x = 0; x < arrRow; x++) { // populates entire array with spaces
+      for (int y = 0; y < arrCol; y++) {
+        array[x][y] = " ";
+      }   
+    }
+    
+    // makes a horizontal size 2 ship (same process for other ships)
+    int j=0;
+    int max2 = arrRow-1;
+    do {
+    // generates random numbers (row/column)
+    randRow = rand.nextInt(max2); 
+    randCol = rand.nextInt(max2);
+      // if the random space does not have a ship, place a ship. 
+      if ((array[randRow][randCol] == " ") && array[randRow][randCol+1] == " ") {
+        array[randRow][randCol] = "s";
+        array[randRow][randCol+1] = "s";
+        j++;
+      }
+    } while (j<1); // continues generating random numbers until 1 ship is placed
+    
+    // makes a vertical size 3 ship
+    int i=0;
+    int max3 = arrRow-2;
+    do {
+    randRow = rand.nextInt(max3);
+    randCol = rand.nextInt(max3);
+     if ((array[randRow][randCol] == " ") && array[randRow+1][randCol] == " " && array[randRow+2][randCol] == " ") {
+        array[randRow][randCol] = "s"; 
+        array[randRow+1][randCol] = "s";
+        array[randRow+2][randCol] = "s";
+        i++;
+     }
+    } while (i<1);
+    
+    // makes a horizontal size 3 ship
+   	int m=0;
+    do {
+    randRow = rand.nextInt(max3);
+    randCol = rand.nextInt(max3);
+     if ((array[randRow][randCol] == " ") && array[randRow][randCol+1] == " " && array[randRow][randCol+2] == " ") {
+        array[randRow][randCol] = "s"; 
+        array[randRow][randCol+1] = "s";
+        array[randRow][randCol+2] = "s";
+        m++;
+     }
+    } while (m<1);
+    
+    // makes horizontal size 4 ship
+    int l=0;
+    int max4 = arrRow-3;
+    do {
+    randRow = rand.nextInt(max4);
+    randCol = rand.nextInt(max4);
+     if ((array[randRow][randCol] == " ") && array[randRow][randCol+1] == " " && array[randRow][randCol+2] == " " && array[randRow][randCol+3] == " ") {
+        array[randRow][randCol] = "s"; 
+        array[randRow][randCol+1] = "s";
+        array[randRow][randCol+2] = "s";
+        array[randRow][randCol +3] = "s";
+        l++;
+     }
+    } while (l<1);
+    
+    
+    // makes vertical size 5 ship
+    int k=0;
+    int max5 = arrRow-5;
+    do {
+    randRow = rand.nextInt(max5);
+    randCol = rand.nextInt(max5);
+     if ((array[randRow][randCol] == " ") && array[randRow+1][randCol] == " " && array[randRow+2][randCol] == " " && array[randRow+3][randCol] == " " && array[randRow+4][randCol] == " ") {
+        array[randRow][randCol] = "s"; 
+        array[randRow+1][randCol] = "s";
+        array[randRow+2][randCol] = "s";
+       	array[randRow+3][randCol] = "s";
+        array[randRow+4][randCol] = "s";
+        k++;
+     }
+    } while (k<1);
+    
+  }
+ 
+  
+  // displays map for user
+  public void displayMap() {
+    int rowNumber = 1;
+    System.out.print("  ");
+    for (int i=1; i<arrRow+1; i++) { // prints column numbers 
+      System.out.print("  |  " + i);
+    }
+    System.out.println();
+    for (int z=0; z<26; z++) { // prints first row dashes
+        System.out.print("--"); 
+      }
+    for (int x=0; x<arrRow; x++) {
+      System.out.println();
+      System.out.print(" " + rowNumber); // prints left side bar numbers
+      for (int y=0; y<arrRow; y++) { // prints grid symbols
+        System.out.print("  |  " + userArray[x][y]);
+      }
+      System.out.println();
+      for (int z=0; z<26; z++) { // prints all othe row dashes
+        System.out.print("--");
+      }
+      rowNumber++;
+    }
+    System.out.println();
+    System.out.println();
+  }
+  
+  // gets guess from user
+  public void getGuess() {
+    do {
+    do {
+    Scanner reader = new Scanner(System.in); 
+    displayMap(); // displays grid
+    System.out.print("Enter row: "); // gets row guess from user
+    row = reader.nextInt() - 1;
+    System.out.print("Enter column: "); // gets column guess from user
+    col = reader.nextInt() - 1;
+    System.out.println();
+    numTurns++;
+      // error checking
+      if (row<0 || row>arrRow || col<0 || col>arrCol) { // outputs error message if number is outside range.
+        System.out.println("Invalid input. Enter numbers between 1 and " + arrRow);
+      }
+      else if (array[row][col] == "0") { // outputs error message if number has been guessed previously. 
+        System.out.println("Invalid input. This has been guessed already.");
+      }
+      } while (row<0 || row>arrRow || col<0 || col>arrCol); // loops if input is invalid
+    
+    if (array[row][col] == " ") { // replaces blank space with water
+      userArray[row][col] = "~";
+      array[row][col] = "0"; // changed to 0 so program knows it was guessed previously
+    }
+    else if (array[row][col] == "s") { // replaces random ship space with x to indicate uncovered ship
+      userArray[row][col] = "x";
+      array[row][col] = "0";
+      System.out.println("You hit a ship!");
+      hitCounter--;
+      System.out.println();
+      System.out.println();
+    }
+    } while (hitCounter>0); // continue asking for guesses while there are more than 0 ships
+  }
+  
+  public void endGame() { 
+    if (hitCounter == 0) { // if there are 0 ships remaining, it displays end of game message
+      displayMap();
+      System.out.println();
+      System.out.println("You won! Good game!");
+      System.out.println("It took " + numTurns + " turns.");
+    }
+  }
+  
+ 
+  
+}
